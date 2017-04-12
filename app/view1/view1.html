@@ -1,0 +1,156 @@
+<section ng-controller="rebuildQuoteController as ctrl" layout="column" class="content-container">
+	<h2>Previously Purchased Modules</h2>
+	 <md-autocomplete
+          ng-disabled="ctrl.isDisabled"
+          md-no-cache="ctrl.noCache"
+          md-selected-item="ctrl.selectedItem"
+          md-search-text-change="ctrl.searchTextChange(ctrl.searchText)"
+          md-search-text="ctrl.searchText"
+          md-selected-item-change="ctrl.selectedItemChange(item)"
+          md-items="item in ctrl.querySearch(ctrl.searchText) | filterBy: ['selected']: '0'"
+          md-item-text="item.nm"
+          md-min-length="0"
+          ng-select = "ctrl.ItemSelected()"
+          placeholder="Pick a Previously Purchased Module"
+          md-menu-class="autocomplete-custom-template">
+        <md-item-template>
+          <span class="item-title">
+            <span>Name:</span>
+            <span> {{item.nm}} </span>
+          </span>
+          <span class="item-metadata">
+         	<span>
+              <span>Group:</span><strong>{{item.group}}</strong> 
+            </span>
+            <span>
+              <span>Description:</span> <strong>{{item.ds}}</strong> 
+            </span>
+            <span>
+              <span>Selected:</span> <strong>{{item.selected}}</strong> 
+            </span>
+            
+          </span>
+        </md-item-template>
+      </md-autocomplete>
+      <ul ng-repeat="item in ctrl.orderItems | filterBy: ['previouslyPurchased']: '1'">
+      	<li>{{item.nm}}</li>
+
+      </ul>
+
+
+	<h2>New Modules</h2>
+	<md-autocomplete
+          ng-disabled="ctrl.isDisabled"
+          md-no-cache="ctrl.noCache"
+          md-selected-item="ctrl.selectedItemNewPurchase"
+          md-search-text-change="ctrl.searchTextChangeNewPurchase(ctrl.searchTextNewPurchase)"
+          md-search-text="ctrl.searchTextNewPurchase"
+          md-selected-item-change="ctrl.selectedItemChangeNewPurchase(item)"
+          md-items="item in ctrl.querySearch(ctrl.searchTextNewPurchase) | filterBy: ['selected']: '0'"
+          md-item-text="item.nm"
+          md-min-length="0"
+          placeholder="Pick New Modules"
+          md-menu-class="autocomplete-custom-template">
+        <md-item-template>
+          <span class="item-title">
+            <span>Name:</span>
+            <span> {{item.nm}} </span>
+          </span>
+          <span class="item-metadata">
+         	<span>
+              <span>Group:</span><strong>{{item.group}}</strong> 
+            </span>
+            <span>
+              <span>Description:</span> <strong>{{item.ds}}</strong> 
+            </span>
+            <span>
+              <span>Selected:</span> <strong>{{item.selected}}</strong> 
+            </span>
+            
+          </span>
+        </md-item-template>
+      </md-autocomplete>
+      <ul ng-repeat="item in ctrl.orderItems | filterBy: ['newPurchase']: '1'">
+      	<li>{{item.nm}} <md-button class="md-raised md-block" ng-click="ctrl.removeOrderItem(item)">Remove</md-button>
+      	<div class="item-details">
+      		Monthly: {{item.monthly}} || Hours(low): {{item.low_hrs}}  || Hours(high): {{item.high_hrs}} || Software(fixed) : {{item.software}}
+      	</div>
+      	</li>
+
+      </ul>
+    <div class="custom-dev">
+		<h2>Custom Development</h2>
+		<div layout-gt-sm="row">
+		  <md-input-container class="md-block" flex-gt-sm>
+		    <label>Name</label>
+		    <input ng-model="ctrl.customDevItem.nm">
+		  </md-input-container>
+		  <md-input-container class="md-block" flex-gt-sm>
+		    <label>Hours (low)</label>
+		    <input ng-model="ctrl.customDevItem.low_hrs"">
+		  </md-input-container>
+		  <md-input-container class="md-block" flex-gt-sm>
+		    <label>Hours (high)</label>
+		    <input ng-model="ctrl.customDevItem.high_hrs">
+		  </md-input-container >
+		  <md-checkbox ng-model="ctrl.customDevItem.planning"" aria-label="Is Planning?" class="md-block" flex-gt-sm>
+	            Is Planning?: {{ ctrl.customDevItem.planning }}
+	      </md-checkbox>
+		</div>
+		<div layout-gt-sm="row">
+			<md-button class="md-raised md-block" flex-gt-sm>Submit</md-button>
+		</div>
+		<div layout-gt-sm="row">
+			<ul ng-repeat="item in ctrl.orderItems | filterBy: ['custom_dev']: '1'">
+	      	<li>{{item.nm}}
+	      	<div class="item-details">
+	      		Monthly: {{item.monthly}} || Hours(low): {{item.low_hrs}}  || Hours(high): {{item.high_hrs}} || Software(fixed) : {{item.software}}
+	      	</div>
+	      	</li>
+
+	      </ul>
+		</div>
+	</div>
+
+	<div class="customer-info">
+		<h2>Customer Information</h2>
+			<div layout-gt-sm="row">
+				<md-input-container class="md-block" flex-gt-sm>
+				<label>Name</label>
+				<input ng-model="user.city">
+				</md-input-container>
+				<md-input-container class="md-block" flex-gt-sm>
+				<label>Email</label>
+				<input ng-model="user.city">
+				</md-input-container>
+			</div>
+			<div layout-gt-sm="row">
+				<md-input-container class="md-block" flex-gt-sm>
+				<label>Company Name</label>
+				<input ng-model="user.city">
+				</md-input-container>
+				<md-input-container class="md-block" flex-gt-sm>
+				<label>Phone Number</label>
+				<input ng-model="user.city">
+				</md-input-container>
+			</div>
+	</div>
+
+	<div class="project-overview">
+	<h2>Project Overview</h2>
+		<ul ng-repeat="item in ctrl.orderItems ">
+			<li>{{item.nm}}</li>
+		</ul>
+	<h2> Cost Overview</h2>
+		Low Hrs : {{ctrl.orderTotals.low_hrs}} || High Hrs : {{ctrl.orderTotals.high_hrs}}<br>
+		Software : {{ctrl.orderTotals.software}} || Monthly : {{ctrl.orderTotals.monthly}}<br>
+
+		Low Estimate: {{ctrl.orderTotals.cost_low}} || <strong>Mid Estimate: {{ctrl.orderTotals.cost_mid}}</strong> || High Estimate: {{ctrl.orderTotals.cost_high}}
+	</div>
+
+	<div class="export-options">
+		<h2> Export Options </h2>
+		<div> PDF || CSV </div>
+	</div>
+
+</section>
